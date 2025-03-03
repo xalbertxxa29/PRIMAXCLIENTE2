@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Menu</title>
+  <link rel="stylesheet" href="menu.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick-theme.min.css">
+
+ 
+  <!-- Librerías para gráficos (con defer) -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js" defer></script>
+
+  <!-- Librerías para manipular documentos Word (sin defer, para garantizar el orden) -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pizzip/3.1.5/pizzip.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/docxtemplater/3.34.2/docxtemplater.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+
+  <!-- Comprobación rápida de PizZip -->
+  <script>
+    console.log("¿Existe PizZip?", window.PizZip);
+  </script>
+</head>
+<body>
+  <div class="sidebar">
+    <div class="welcome-message">
+      <h2>Bienvenido</h2>
+      <p id="user-name"></p>
+    </div>
+    <hr class="sidebar-divider" />
+    <nav>
+      <ul>
+        <li>
+          <button class="menu-option" data-section="inicio" aria-label="Ir a Inicio">
+            Inicio
+          </button>
+        </li>
+        <li>
+          <button
+            class="menu-option"
+            data-section="dashboard-alarmas"
+            aria-label="Ir al Dashboard de Alarmas"
+          >
+            Dashboard de Alarmas
+          </button>
+        </li>
+        <li>
+          <button
+            class="menu-option"
+            data-section="dashboard-tickets"
+            aria-label="Ir al Dashboard Tickets Generados"
+          >
+            Dashboard Tickets Generados
+          </button>
+        </li>
+        <li>
+          <button
+            class="menu-option"
+            data-section="tickets-pendientes"
+            aria-label="Ver Tickets Pendientes"
+          >
+            Tickets Pendientes
+          </button>
+        </li>
+        <li>
+          <button
+            class="menu-option"
+            data-section="tickets-resueltos"
+            aria-label="Ver Tickets Resueltos"
+          >
+            Tickets Resueltos
+          </button>
+        </li>
+        <li>
+          <button
+            class="menu-option"
+            data-section="directorio-liderman"
+            aria-label="Ir al Directorio Liderman"
+          >
+            Directorio Liderman
+          </button>
+        </li>
+      </ul>
+    </nav>
+    <button id="logout-btn" aria-label="Cerrar sesión">Cerrar sesión</button>
+  </div>
+
+  <div class="content">
+    <!-- Sección: Inicio -->
+    <div id="inicio" class="dashboard-section">
+      <h1>Inicio</h1>
+      <div class="inicio-gallery">
+        <!-- Tarjetas con imágenes -->
+        <div class="card">
+          <h3>Seguridad Física</h3>
+          <img src="image1.jpg" alt="Seguridad Física" />
+        </div>
+        <div class="card">
+          <h3>Alarmas</h3>
+          <img src="image2.jpg" alt="Alarmas" />
+        </div>
+        <div class="card">
+          <h3>Soluciones Tecnológicas</h3>
+          <img src="image3.jpg" alt="Soluciones Tecnológicas" />
+        </div>
+        <div class="card">
+          <h3>Sistema GPS</h3>
+          <img src="image4.jpg" alt="Sistema GPS" />
+        </div>
+        <div class="card">
+          <h3>Estacionamientos y Valet Parking</h3>
+          <img src="image5.jpg" alt="Estacionamientos y Valet Parking" />
+        </div>
+      </div>
+
+      <!-- Carrusel -->
+      <div class="carousel">
+        <div><img src="carousel1.jpg" alt="Imagen 1 del carrusel" /></div>
+        <div><img src="carousel2.jpg" alt="Imagen 2 del carrusel" /></div>
+        <div><img src="carousel3.jpg" alt="Imagen 3 del carrusel" /></div>
+        <div><img src="carousel4.jpg" alt="Imagen 4 del carrusel" /></div>
+      </div>
+    </div>
+
+    <!-- Sección: Dashboard de Alarmas -->
+    <div id="dashboard-alarmas" class="dashboard-section" style="display: none;">
+      <h1>Dashboard de Alarmas</h1>
+      <iframe
+        title="PRIMAX"
+        width="100%"
+        height="750"
+        src="https://app.powerbi.com/view?r=eyJrIjoiNDIwMTZjNWYtNDM5Zi00Yzg0LTk5Y2MtM2NmMzY0YzcwNDdiIiwidCI6IjkzNjQ5YmM4LTgyNzctNDBlYS1hZDE2LWUyOTliYzk2NGFhOSIsImMiOjR9"
+        frameborder="0"
+        allowfullscreen
+      ></iframe>
+    </div>
+
+    <!-- Sección: Dashboard Tickets Generados -->
+    <div id="dashboard-tickets" class="dashboard-section" style="display: none;">
+      <h1>Dashboard Tickets Generados</h1>
+      <div class="filters">
+        <label for="filter-month">Seleccionar Mes:</label>
+        <select id="filter-month" aria-label="Seleccionar Mes">
+          <option value="">Todos</option>
+          <option value="1">Enero</option>
+          <option value="2">Febrero</option>
+          <option value="3">Marzo</option>
+          <option value="4">Abril</option>
+          <option value="5">Mayo</option>
+          <option value="6">Junio</option>
+          <option value="7">Julio</option>
+          <option value="8">Agosto</option>
+          <option value="9">Septiembre</option>
+          <option value="10">Octubre</option>
+          <option value="11">Noviembre</option>
+          <option value="12">Diciembre</option>
+        </select>
+        <button id="search-btn" aria-label="Buscar datos por mes">Buscar</button>
+        <!-- Botón para exportar a Excel -->
+        <button id="export-btn" class="export-button" aria-label="Exportar a Excel">
+          <img src="excel-icon.png" alt="Exportar a Excel" class="export-icon" />
+          Exportar
+        </button>
+      </div>
+
+      <!-- Gráficos -->
+      <div class="chart-row">
+        <div class="chart-container">
+          <canvas id="ticketsChart"></canvas>
+        </div>
+        <div class="chart-container">
+          <canvas id="localChart"></canvas>
+        </div>
+      </div>
+      <div class="chart-row">
+        <div class="chart-container">
+          <canvas id="localPieChart"></canvas>
+        </div>
+        <div class="chart-container">
+          <canvas id="systemTypeChart"></canvas>
+        </div>
+      </div>
+    </div>
+
+    <!-- Sección: Tickets Pendientes -->
+    <div id="tickets-pendientes" class="dashboard-section" style="display: none;">
+      <h1>Tickets Pendientes</h1>
+      <table id="tabla-pendientes">
+        <thead>
+          <tr>
+            <th>Date</th>
+            <th>Time</th>
+            <th>Local</th>
+            <th>Estado</th>
+            <th>Incident Type</th>
+            <th>System Type</th>
+            <th>Observations</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+
+    <!-- Sección: Tickets Resueltos -->
+    <div id="tickets-resueltos" class="dashboard-section" style="display: none;">
+      <h1>Tickets Resueltos</h1>
+      <table id="tabla-resueltos">
+        <thead>
+          <tr>
+            <th>Date</th>
+            <th>Time</th>
+            <th>Local</th>
+            <th>Estado</th>
+            <th>Incident Type</th>
+            <th>System Type</th>
+            <th>Observations</th>
+            <th>Descargar</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+
+    <!-- Sección: Directorio Liderman -->
+    <div id="directorio-liderman" class="dashboard-section" style="display: none;">
+      <h1>Directorio Liderman</h1>
+      <div class="directory-container">
+        <div class="directory-card">
+          <img src="person1.jpg" alt="Dante Quiroz" class="directory-img" />
+          <h3>Dante Quiroz</h3>
+          <p><strong>Cargo:</strong> Director de Tecnología</p>
+          <p><strong>Celular:</strong> 937 404 765</p>
+          <p><strong>Correo:</strong> dquiroz@liderman.com.pe</p>
+        </div>
+        <div class="directory-card">
+          <img src="person2.jpg" alt="Katia Rodriguez" class="directory-img" />
+          <h3>Katia Rodriguez</h3>
+          <p><strong>Cargo:</strong> Sub Gerente de Negocios de Tecnología</p>
+          <p><strong>Celular:</strong> 998 280 333</p>
+          <p><strong>Correo:</strong> krodriguez@liderman.com.pe</p>
+        </div>
+        <div class="directory-card">
+          <img src="person3.jpg" alt="Victor Perez" class="directory-img" />
+          <h3>Victor Perez</h3>
+          <p><strong>Cargo:</strong> Jefe de Operación de Alarmas</p>
+          <p><strong>Celular:</strong> 998 354 621</p>
+          <p><strong>Correo:</strong> vperez@liderman.com.pe</p>
+        </div>
+        <div class="directory-card">
+          <img src="person4.jpg" alt="Juan Alberto Solis" class="directory-img" />
+          <h3>Juan Alberto Solis</h3>
+          <p><strong>Cargo:</strong> Jefe de Central de Atención Técnica Virtual</p>
+          <p><strong>Celular:</strong> 934 682 684</p>
+          <p><strong>Correo:</strong> jsolis@liderman.com.pe</p>
+        </div>
+        <div class="directory-card">
+          <img src="person5.jpg" alt="Cesar Chavez" class="directory-img" />
+          <h3>Cesar Chavez</h3>
+          <p><strong>Cargo:</strong> Jefe de Centro de Control y Rondas</p>
+          <p><strong>Celular:</strong> 998 359 061</p>
+          <p><strong>Correo:</strong> cchavez@liderman.com.pe</p>
+        </div>
+        <div class="directory-card">
+          <img src="person6.jpg" alt="Julio Cardeña" class="directory-img" />
+          <h3>Julio Cardeña</h3>
+          <p><strong>Cargo:</strong> Jefe de Proyectos</p>
+          <p><strong>Celular:</strong> 998 990 793</p>
+          <p><strong>Correo:</strong> jcardena@liderman.com.pe</p>
+        </div>
+        <div class="directory-card">
+          <img src="person7.jpg" alt="Juan Martin Hernandez" class="directory-img" />
+          <h3>Juan Martin Hernandez</h3>
+          <p><strong>Cargo:</strong> Jefe de GPS</p>
+          <p><strong>Celular:</strong> 944 268 640</p>
+          <p><strong>Correo:</strong> jhernandez@liderman.com.pe</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Firebase SDKs -->
+  <script src="https://www.gstatic.com/firebasejs/10.9.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.9.0/firebase-firestore-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.9.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.9.0/firebase-database-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.9.0/firebase-storage-compat.js"></script>
+
+  <!-- jQuery y Slick (solo una vez) -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.min.js"></script>
+
+  <!-- Configuración de Firebase y carrusel -->
+  <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyAegP-XRvsKqAqEvKY5KhOjjChN1Up2tFI",
+      authDomain: "primax-a2cf9.firebaseapp.com",
+      projectId: "primax-a2cf9",
+      storageBucket: "primax-a2cf9",
+      messagingSenderId: "388247650730",
+      appId: "1:388247650730:web:7769efb02bacfb2ca06bd3",
+      measurementId: "G-LRLQY9CGPX"
+    };
+
+    // Inicializar Firebase
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
+    const storage = firebase.storage();
+    const auth = firebase.auth();
+
+    // Inicializar carrusel
+    $(document).ready(function() {
+      $('.carousel').slick({
+        infinite: true,
+        slidesToShow: 1,
+        slidesToScroll: 1,
+        arrows: true,
+        dots: true,
+        autoplay: true,
+        autoplaySpeed: 2000
+      });
+    });
+  </script>
+
+  <!-- Tu script principal, que usa PizZip y docxtemplater -->
+  <script src="menu.js" defer></script>
+</body>
+</html>

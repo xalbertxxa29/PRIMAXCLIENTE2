@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ticketera Primax</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="manifest" href="manifest.json">
+</head>
+<body>
+    <div class="login-container">
+        <div class="logo">Liderman Ticketera</div>
+        <div class="login-card">
+            <label for="username">Correo electrónico</label>
+            <input type="email" id="username" placeholder="Correo electrónico" required>
+            <label for="password">Contraseña</label>
+            <input type="password" id="password" placeholder="Contraseña" required>
+            <div class="remember-me">
+                <input type="checkbox" id="remember">
+                <label for="remember">Recordarme</label>
+            </div>
+            <button id="login-btn">Iniciar sesión</button>
+            <div class="links">
+                <a href="#">Políticas de Privacidad</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Firebase SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/10.9.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.9.0/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.9.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.9.0/firebase-database-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.9.0/firebase-storage-compat.js"></script>
+
+    <!-- Configuración de Firebase -->
+    <script>
+        const firebaseConfig = {
+            apiKey: "AIzaSyAegP-XRvsKqAqEvKY5KhOjjChN1Up2tFI",
+            authDomain: "primax-a2cf9.firebaseapp.com",
+            projectId: "primax-a2cf9",
+            storageBucket: "primax-a2cf9",
+            messagingSenderId: "388247650730",
+            appId: "1:388247650730:web:7769efb02bacfb2ca06bd3",
+            measurementId: "G-LRLQY9CGPX"
+        };
+
+        // Inicializa Firebase
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+        const storage = firebase.storage()
+        const auth = firebase.auth();
+    </script>
+
+    <!-- Script Principal -->
+    <script src="script.js"></script>
+</body>
+</html>
