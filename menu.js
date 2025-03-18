@@ -42,6 +42,7 @@ document.addEventListener('DOMContentLoaded', () => {
             console.error("Error al obtener la plantilla:", error);
         }
     }
+
     async function generarDocumento(ticketData) {
         try {
             const plantillaBlob = await obtenerPlantillaDesdeFirebase();
@@ -49,30 +50,46 @@ document.addEventListener('DOMContentLoaded', () => {
 
             const reader = new FileReader();
             reader.onload = async function(event) {
-                const contenidoArrayBuffer = event.target.result;
-                const zip = new PizZip(contenidoArrayBuffer);
-                const doc = new window.docxtemplater(zip);
+                try {
+                    const contenidoArrayBuffer = event.target.result;
+                    const zip = new PizZip(contenidoArrayBuffer);
+                    const doc = new window.docxtemplater(zip);
 
-                doc.setData({
-                    fecha: ticketData.date || "N/A",
-                    hora: ticketData.time || "N/A",
-                    local: ticketData.local || "N/A",
-                    estado: ticketData.estado || "N/A",
-                    tipoIncidente: ticketData.incidentType || "N/A",
-                    tipoSistema: ticketData.systemType || "N/A",
-                    observaciones: ticketData.observations || "N/A"
-                });
+                    doc.setData({
+                        fecha: ticketData.date || "N/A",
+                        hora: ticketData.time || "N/A",
+                        local: ticketData.local || "N/A",
+                        estado: ticketData.estado || "N/A",
+                        tipoIncidente: ticketData.incidentType || "N/A",
+                        tipoSistema: ticketData.systemType || "N/A",
+                        observaciones: ticketData.observations || "N/A"
+                    });
 
-                doc.render();
-                const docBlob = doc.getZip().generate({ type: "blob" });
-                saveAs(docBlob, "Reporte.docx");
+                    doc.render();
+                    const docBlob = doc.getZip().generate({ type: "blob" });
+                    
+                    // Convertir el DOCX a PDF
+                    const pdfUrl = await convertirDocxAPdf(docBlob);
+                    if (pdfUrl) {
+                        // Abrir el PDF en una nueva pestaña
+                        window.open(pdfUrl, "_blank");
+                    } else {
+                        // Si falla la conversión, se descarga el DOCX
+                        alert("No se pudo convertir a PDF, descargando el documento en formato DOCX.");
+                        saveAs(docBlob, "Reporte.docx");
+                    }
+                } catch (error) {
+                    console.error("Error en el procesamiento de la plantilla:", error);
+                }
+            };
+            reader.onerror = function(error) {
+                console.error("Error leyendo la plantilla:", error);
             };
             reader.readAsArrayBuffer(plantillaBlob);
         } catch (error) {
             console.error("Error generando el documento:", error);
         }
     }
-
 
     async function convertirDocxAPdf(docxBlob) {
         const formData = new FormData();
@@ -81,6 +98,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const response = await fetch("https://api.pdf.co/v1/pdf/convert/from/docx", {
             method: "POST",
             headers: {
+                // Nota: Considera mover esta API key a un entorno seguro para no exponerla en el cliente.
                 "x-api-key": "xalbertxxa@gmail.com_Lh3Ni5NOjCLqOcNgetR41K0nce2O7GeDjsLN16zoijFfKLirVEIWswXeW17mKI74"
             },
             body: formData
@@ -94,7 +112,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
         return result.url;
     }
-
 
     // ----------------------------
     // Función para Cargar Tickets Pendientes y Resueltos en Tablas
@@ -131,8 +148,6 @@ document.addEventListener('DOMContentLoaded', () => {
             console.error(`Error cargando los tickets (${estado}):`, error);
         }
     }
-
-        
 
     // Cargar tickets resueltos cuando se accede a la sección
     document.querySelector("[data-section='tickets-resueltos']").addEventListener("click", () => {
@@ -194,7 +209,6 @@ document.addEventListener('DOMContentLoaded', () => {
     // ----------------------------
     // Funciones para crear Gráficos
     // ----------------------------
-
     function createBarChart(ctx, label) {
         return new Chart(ctx, {
             type: 'bar',
@@ -403,7 +417,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     initializeCharts();
     console.log('✅ main.js cargado y ejecutado correctamente.');
-
-    
 });
+
 
